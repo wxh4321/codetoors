@@ -4,17 +4,24 @@ environment = [
     ['O','O','O','O','R']
 ]
 
+# environment = [['A','X','R','R','R'],['O','O','O','X','R'],['O','O','O','B','R']]
+
 def rewardShortPaths(env):
     res = []
     i = 0 # up or down
     j = 0 # only right
-
+    visited = []
     def getminpath(env,i,j,arr,direction='right',pathcount=0,rewardnum=0):
+        if str(i)+','+str(j) not in visited:
+            visited.append(str(i)+','+str(j))
+
         if i >= len(env) or i < 0:
             return
         if j >= len(env[0]) or j < 0:
-            getminpath(env, i - 1, j - 1, arr, 'up', pathcount, rewardnum)
-            getminpath(env, i + 1, j - 1, arr, 'down', pathcount, rewardnum)
+            if i - 1 >= 0 and str(i-1)+','+str(j-1) not in visited:
+                getminpath(env, i - 1, j - 1, arr, 'up', pathcount, rewardnum)
+            if i+1 <= len(env)-1 and str(i+1)+','+str(j-1) not in visited:
+                getminpath(env, i + 1, j - 1, arr, 'down', pathcount, rewardnum)
             return
 
         if env[i][j] == 'B':
@@ -30,13 +37,18 @@ def rewardShortPaths(env):
         if env[i][j]=='R':
             rewardnum = rewardnum + 1
         if env[i][j] == 'X' and direction == 'right':
-            getminpath(env, i - 1, j - 1, arr, 'up', pathcount, rewardnum)
-            getminpath(env, i + 1, j - 1, arr, 'down', pathcount, rewardnum)
+            if i-1>=0 :
+                getminpath(env, i - 1, j - 1, arr, 'up', pathcount, rewardnum)
+            if i+1<=len(env)-1:
+                getminpath(env, i + 1, j - 1, arr, 'down', pathcount, rewardnum)
+
         elif env[i][j] == 'X' and direction == 'up':
             getminpath(env, i - 1, j + 1, arr, 'right', pathcount, rewardnum)
-            getminpath(env, i, j, arr, 'down', pathcount, rewardnum)
+            if i <= len(env) - 1:
+                getminpath(env, i, j, arr, 'down', pathcount, rewardnum)
         elif env[i][j]=='X'and direction=='down':
-            getminpath(env, i, j, arr, 'up', pathcount, rewardnum)
+            if i >= 0:
+                getminpath(env, i, j, arr, 'up', pathcount, rewardnum)
             getminpath(env, i + 1, j + 1, arr, 'right', pathcount, rewardnum)
         else:
             getminpath(env, i, j + 1, arr, 'right', pathcount, rewardnum)

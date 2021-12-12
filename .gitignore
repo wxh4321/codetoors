@@ -1,0 +1,8 @@
+dist/
+twofunc/assessment1-2122
+twofunc/test2.js
+deploy_versions/
+.temp/
+.rn_temp/
+node_modules/
+.DS_Store
